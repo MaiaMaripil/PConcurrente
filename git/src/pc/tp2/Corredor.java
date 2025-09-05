@@ -20,7 +20,7 @@ public class Corredor implements Runnable {
         return distancia;
     }
     public String getDatos(){
-        String n=(nombre+"| DISTANCIA TOTAL: "+distancia);
+        String n=(nombre+"| DISTANCIA TOTAL : "+distancia);
         return n;
     }
 
