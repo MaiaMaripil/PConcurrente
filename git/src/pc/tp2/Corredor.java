@@ -10,7 +10,7 @@ package pc.tp2;
  */
 public class Corredor implements Runnable {
 
-    private String nombre;
+    /*private String nombre;
     private int distancia = 0;
 
     public Corredor(String n) {
@@ -37,7 +37,7 @@ public class Corredor implements Runnable {
             }
         }
         System.out.println("Termina thread " + nombre);
-    }
+    }*/
 
     
 }
