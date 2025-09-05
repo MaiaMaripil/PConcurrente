@@ -8,37 +8,74 @@ package pc.tp2;
  *
  * @author famil
  */
-public class Corredor implements Runnable {
-int a;
-    /*private String nombre;
-    private int distancia = 0;
+public class Corredor {
 
-    public Corredor(String n) {
+    public static void main(String[] args) {
+        CorredorRun[] array = new CorredorRun[5];
+        Thread[] hilos = new Thread[5];
+
+        for (int i = 0; i < array.length; i++) {
+            array[i] = new CorredorRun("corredor " + (i + 1));
+            hilos[i] = new Thread(array[i]);
+            hilos[i].start();
+        }
+
+        try {
+            for (int i = 0; i < array.length; i++) {
+                hilos[i].join();
+            }
+        } catch (InterruptedException e) {
+            System.out.println("ERROR EN EL MAIN");
+        }
+
+        System.out.println("El corredor con mayor distancia recorrida es:  " + mayorDistancia(array).getNombre());
+        for (int i = 0; i < array.length; i++) {
+            System.out.println("CORREDOR: " + (i + 1) + "| DISTANCIA RECORRIDA: " + array[i].getDistancia());
+        }
+    }
+
+    public static CorredorRun mayorDistancia(CorredorRun[] array) {
+        CorredorRun corredor = array[0];
+        CorredorRun aux;
+
+        for (int i = 0; i < array.length; i++) {
+            aux = array[i];
+            if (corredor.getDistancia() < aux.getDistancia()) {
+                corredor = aux;
+            }
+        }
+        return corredor;
+    }
+}
+
+class CorredorRun implements Runnable {
+
+    String nombre;
+    double distRecorrida = 0;
+
+    public CorredorRun(String n) {
         this.nombre = n;
     }
-    public int getDistancia(){
-        return distancia;
+    
+    public double getDistancia(){
+        return this.distRecorrida;
     }
-    public String getDatos(){
-        String n=(nombre+"| DISTANCIA TOTAL : "+distancia);
-        return n;
+    public String getNombre(){
+        return this.nombre;
     }
 
     public void run() {
-        for (int i = 0; i < 100; i++) {
-            int numAleatorio = (int) (Math.random() * 10) + 1;
-            System.out.println("Paso "+(i+1)+" de "+nombre+" |Distancia: "+numAleatorio);
-            
-            distancia = distancia + numAleatorio;
+        //simula los 100 pasos
+        for (int i = 0; i <= 100; i++) {
+            int aux = (int) (Math.random() * 10) + 1;
+            System.out.println("Soy el corredor: " + nombre + " En el paso numero: " + i + " recorri: " + aux + " km.");
+            distRecorrida = distRecorrida + aux;
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                System.out.println(nombre + " Interrumpido.");
+                System.out.println("ERROR EN EJECUCION");
             }
         }
-        System.out.println("Termina thread " + nombre);
-    }*/
-
-    
+        System.out.println("TERMINA EL RECORRIDO DE " + nombre);
+    }
 }
- 
