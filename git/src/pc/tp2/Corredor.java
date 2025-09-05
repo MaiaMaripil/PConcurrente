@@ -9,7 +9,7 @@ package pc.tp2;
  * @author famil
  */
 public class Corredor implements Runnable {
-
+int a;
     /*private String nombre;
     private int distancia = 0;
 
