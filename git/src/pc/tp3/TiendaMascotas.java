@@ -9,57 +9,126 @@ package pc.tp3;
  * @author famil
  */
 public class TiendaMascotas {
+//deberia ser una clase Hamster runnable? o sigo el ejemplo del banco del tp.
 
     public static void main(String[] args) {
-       
-        //Hamster h1 = new Hamster(act);
-        //Hamster h2 = new Hamster(act);
- Actividades act = new Actividades();
-        Thread t1 = new Thread(act, "Hamster 1");
-        Thread t2 = new Thread(act, "Hamster 2");
+        Jaula unaJaula = new Jaula();
+        Hamster h1 = new Hamster("Hamster 1",unaJaula);
+        Hamster h2 = new Hamster("Hamster 2",unaJaula);
+        Hamster h3 = new Hamster("Hamster 3",unaJaula);
+        
+        Thread t1 = new Thread(h1, "Hamster 1");
+        Thread t2 = new Thread(h2, "Hamster 2");
+        Thread t3 = new Thread(h3, "Hamster 3");
 
         t1.start();
         t2.start();
+        t3.start();
     }
 }
 
-class Jaula{
+class Hamster implements Runnable {
+
+    String nombre;
+    Jaula rC;
+    boolean comio = false;
+    boolean corrio = false;
+    boolean durmio = false;
+
+    public Hamster(String n, Jaula r) {
+        this.nombre = n;
+        this.rC = r;
+    }
+
+    @Override
+    public void run() {
+        try {
+            while (!(comio && corrio && durmio)) {
+
+                if (!comio && rC.comer(nombre)) {
+                    Thread.sleep(500);
+                    rC.terminarComer(nombre);
+                    comio = true;
+                }
+                if (!corrio && rC.correr(nombre)) {
+                    Thread.sleep(500);
+                    rC.terminarCorrer(nombre);
+                    corrio = true;
+                }
+                if (!durmio && rC.descansar(nombre)) {
+                    Thread.sleep(500);
+                    rC.terminarDescansar(nombre);
+                    durmio = true;
+                }
+                
+            }
+
+        } catch (InterruptedException e) {
+            System.out.println("ERROR");
+
+        }
+    }
+}
+
+class Jaula {
+
+    boolean plato = true;
+    boolean hamaca = true;
+    boolean rueda = true;
 //recurso compartido
-    public synchronized void comer(String n){
-        System.out.println(n+" esta comiendo...");
-        try{
-            Thread.sleep(100);
-        }catch(InterruptedException e){
-            System.out.println("Error");
+
+    public synchronized boolean comer(String n) {
+        boolean pudoComer = false;
+        if (plato) {
+            plato = false;
+            pudoComer = true;
+            System.out.println(n + " esta comiendo...");
         }
-        System.out.println(n+" TERMINO DE COMER");
+        return pudoComer;
     }
-    
-    public synchronized void correr(String n){
-         System.out.println(n+" esta corriendo...");
-        try{
-            Thread.sleep(100);
-        }catch(InterruptedException e){
-            System.out.println("Error");
+
+    public synchronized void terminarComer(String n) {
+        System.out.println(n + " TERMINO DE COMER");
+        plato = true;
+    }
+
+    public synchronized boolean correr(String n) {
+        boolean pudoCorrer = false;
+        if (rueda) {
+            pudoCorrer = true;
+            rueda = false;
+            System.out.println(n + " esta corriendo...");
         }
-        System.out.println(n+" TERMINO DE CORRER");
+        return pudoCorrer;
     }
-    
-    public synchronized void descansar(String n){
-         System.out.println(n+" esta descansando...");
-        try{
-            Thread.sleep(100);
-        }catch(InterruptedException e){
-            System.out.println("Error");
+
+    public synchronized void terminarCorrer(String n) {
+        System.out.println(n + " TERMINO DE CORRER");
+        rueda = true;
+    }
+
+    public synchronized boolean descansar(String n) {
+        boolean pudoDormir = false;
+        if (hamaca) {
+            hamaca = false;
+            pudoDormir = true;
+            System.out.println(n + " esta descansando...");
         }
-        System.out.println(n+" TERMINO DE DESCANSAR");
+        return pudoDormir;
     }
-    
+
+    public synchronized void terminarDescansar(String n) {
+        System.out.println(n + " TERMINO DE USAR HAMACA");
+        hamaca = true;
+    }
+
 }
 
-class Actividades implements Runnable{
-    Jaula recurso=new Jaula();
-    
+/*
+class Actividades implements Runnable {
+
+    Jaula recurso = new Jaula();
+
     private void comer(String n) throws InterruptedException {
         System.out.println(n + " quiere COMER.");
         recurso.comer(n);
@@ -74,21 +143,18 @@ class Actividades implements Runnable{
         System.out.println(n + " quiere DESCANSAR.");
         recurso.descansar(n);
     }
-    
-    public void run(){
-        try{
-          comer(Thread.currentThread().getName());
-          correr(Thread.currentThread().getName());
-          descansar(Thread.currentThread().getName());
-        }catch (InterruptedException e){
+
+    public void run() {
+        try {
+            comer(Thread.currentThread().getName());
+            correr(Thread.currentThread().getName());
+            descansar(Thread.currentThread().getName());
+        } catch (InterruptedException e) {
             System.out.println("ERROR");
         }
     }
 }
-
-
-
-
+*/
 /*
 
 class Hamster implements Runnable {
@@ -160,5 +226,4 @@ class Actividades {
         return "Amaca: " + amaca + " Rueda: " + rueda + " Plato: " + plato;
     }
 }
-*/
-
+ */
